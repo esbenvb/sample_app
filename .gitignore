@@ -13,3 +13,26 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+bundler_stubs/autospec
+bundler_stubs/erubis
+bundler_stubs/htmldiff
+bundler_stubs/ldiff
+bundler_stubs/nokogiri
+bundler_stubs/rackup
+bundler_stubs/rails
+bundler_stubs/rake
+bundler_stubs/rake2thor
+bundler_stubs/rdoc
+bundler_stubs/ri
+bundler_stubs/rspec
+bundler_stubs/sass
+bundler_stubs/sass-convert
+bundler_stubs/scss
+bundler_stubs/sprockets
+bundler_stubs/thor
+bundler_stubs/tilt
+bundler_stubs/tt
+bundler_stubs/coderay
+bundler_stubs/guard
+bundler_stubs/pry
+bundler_stubs/spork
