@@ -16,23 +16,90 @@ describe "User Pages" do
   
   describe "signup" do
     before { visit signup_path }
-    let (:submit) { "Create my acount" }
+    let (:submit) { "Create my account" }
 
     describe "with invalid information" do
-      it "should no create a user" do
-        expect { click_button }.not_to change(User, :count)
+      it "should not create a user" do
+        expect { click_button submit}.not_to change(User, :count)
+      end
+      describe "after submission" do
+        before { click_button submit }
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content('error') }
       end
     end
 
+    describe "with invalid email-address" do
+      before do
+        fill_in "Name", with: "Example User"
+        fill_in "Email", with: "use-example.com"
+        fill_in "Password", with: "foobar"
+        fill_in "Confirmation", with: "foobar"
+      end
+      it "should not create a user" do
+        expect { click_button submit}.not_to change(User, :count)
+      end
+      describe "after submission" do
+        before { click_button submit }
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content('Email is invalid') }
+      end
+    end
+
+    
+    describe "with empty email-address" do
+      before do
+        fill_in "Name", with: "Example User"
+        fill_in "Email", with: ""
+        fill_in "Password", with: "foobar"
+        fill_in "Confirmation", with: "foobar"
+      end
+      it "should not create a user" do
+        expect { click_button submit}.not_to change(User, :count)
+      end
+      describe "after submission" do
+        before { click_button submit }
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content("Email can\'t be blank") }
+      end
+    end
+
+        
+    describe "with non-matching confirmation" do
+      before do
+        fill_in "Name", with: "Example User"
+        fill_in "Email", with: "asdsa@dsad.dk"
+        fill_in "Password", with: "foobar"
+        fill_in "Confirmation", with: "fooba2r"
+      end
+      it "should not create a user" do
+        expect { click_button submit}.not_to change(User, :count)
+      end
+      describe "after submission" do
+        before { click_button submit }
+        it { should have_selector('title', text: 'Sign up') }
+        it { should have_content("Password doesn't match confirmation") }
+      end
+    end
+
+    
+    
     describe "with valid information" do
       before do
         fill_in "Name", with: "Example User"
         fill_in "Email", with: "user@example.com"
         fill_in "Password", with: "foobar"
-        fill_in "Confirmataion", with: "foobar"
+        fill_in "Confirmation", with: "foobar"
       end
-      it "should no create a user" do
-        expect { click_button }.to change(User, :count).by(1)
+      it "should create a user" do
+        expect { click_button submit}.to change(User, :count).by(1)
+      end
+      describe "after saving the user" do
+        before { click_button submit }
+        let(:user) {User.find_by_email('user@example.com')}
+        
+        it { should have_selector('title', text: user.name)}
+        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
       end
     end
 
