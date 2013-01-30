@@ -91,8 +91,15 @@ describe User do
     before {@user.password_confirmation = nil}
     it {should_not be_valid}
   end
-  
-  
+
+  describe "accessible attributes" do
+    it "should not allow protected admin attribute to be set" do
+      expect do
+        User.new(name: "a", email: "a@a3.dk", password: "f1234567", password_confirmation: "f1234567", admin: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
+
   describe "return value of authenticate method" do
     before { @user.save}
     let (:found_user) { User.find_by_email(@user.email)}
@@ -119,5 +126,5 @@ describe User do
     end
     it{should be_admin}
   end
-  
+
 end

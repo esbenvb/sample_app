@@ -43,10 +43,13 @@ describe "User Pages" do
         end
 
         it { should_not have_link('delete', href: user_path(admin)) }
+        it "should not be able to delete admin itself" do
+          expect { delete user_path(admin) }.to_not change(User, :count).by(-1)
+        end
       end
     end
   end
-  
+
 
 
   describe "signup page" do
@@ -176,7 +179,7 @@ describe "User Pages" do
         fill_in "Name",                 with: new_name
         fill_in "Email",                with: new_email
         fill_in "Password",             with: user.password
-        fill_in "Confirm Password",     with: user.password
+        fill_in "Confirmation",     with: user.password
         click_button "Save changes"
       end
       it { should have_title(new_name) }
