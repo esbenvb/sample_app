@@ -31,8 +31,54 @@ describe "Static pages" do
           page.should have_selector("li##{item.id}", text: item.content)
         end
       end
-    end
 
+      describe "sidebar micropost counter" do
+        it {should have_content('2 microposts')}
+        describe "with only one micropost" do
+          before do 
+            user.microposts.first.destroy
+            visit root_path
+          end
+
+          it {should have_content '1 micropost'}
+        end
+      end
+
+
+      describe "pagination" do
+        before do
+         130.times { FactoryGirl.create(:micropost, user: user) } 
+         visit root_path
+       end
+       let (:posts) { user.microposts.paginate(page: 1) }
+
+
+        it {should have_selector("div.pagination")}
+        it "should have posts" do
+          posts.length.should_not be 0 
+        end
+        it "should list each post" do
+          posts.each do |micropost|
+            page.should have_selector('li', text: micropost.content)
+          end
+        end
+
+        describe "next page" do
+          before { click_link "2"}
+          let (:posts) { user.microposts.paginate(page: 1) }
+
+          it "should have posts" do
+            posts.length.should_not be 0
+          end
+          it "should list each post" do
+            posts.each do |micropost|
+              page.should have_selector('li', text: micropost.content)
+            end
+          end
+        end
+
+      end
+    end
   end
   describe "Help page" do
     before { visit help_path }
@@ -61,7 +107,7 @@ describe "Static pages" do
     click_link "Help"
     page.should have_title  full_title('Help')
     click_link "Contact"
-    #page.should have_selector 'title', text: full_title('Contact')
+    page.should have_selector 'title', text: full_title('Contact')
     click_link "Home"
     click_link "Sign up now!"
     page.should have_title  full_title('Sign up')

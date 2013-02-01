@@ -14,3 +14,22 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require_tree .
+
+(function ($) {
+  $(document).ready(function() {
+    var max = 140;
+    var remaining = max;
+    $textarea = $('#micropost_content');
+    $container = $textarea.parent();
+    $container.append('<div class="micropost-countdown">' + remaining + '</div>');
+    $countdown = $container.find('.micropost-countdown');
+    $container.bind('keydown', function(event){
+      console.log(event);
+      remaining = max - $textarea.val().length;
+      $countdown.html(remaining);
+      if (remaining < 0) {
+        return false;
+      }
+    });
+  });
+})(jQuery);

@@ -4,6 +4,7 @@ describe "Micropost Pages" do
   subject {page}
 
   let(:user) {FactoryGirl.create(:user)}
+  let(:another_user) {FactoryGirl.create(:user)}  
 
   before {sign_in user}
 
@@ -34,6 +35,13 @@ describe "Micropost Pages" do
       it "should delete a micropost" do
         expect { click_link "delete" }.to change(Micropost, :count).by(-1)
       end
+    end
+    describe "as wrong user" do
+      before do
+        sign_in another_user
+        visit user_path(user)
+      end
+      it { should_not have_link('delete')}
     end
   end
 end
