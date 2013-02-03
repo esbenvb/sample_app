@@ -32,6 +32,12 @@ RSpec::Matchers.define :have_heading do |message|
   end
 end
 
+RSpec::Matchers.define :have_subheading do |message|
+  match do |page|
+    page.should have_selector('h3', text: message)
+  end
+end
+
 def valid_signin(user)
   fill_in "Email", with: user.email
   fill_in "Password", with: user.password
